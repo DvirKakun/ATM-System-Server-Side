@@ -1,11 +1,13 @@
 from flask import jsonify, request, abort
-from atm import Get_Balance, Withdraw, Deposite
+# from atm import Get_Balance, Withdraw, Deposite
+from database import account_manager
 
 def init_routes(app):
     @app.route('/accounts/<account_number>/balance', methods = ['GET'])
     def Balance(account_number):
         try:
-            balance = Get_Balance(account_number)
+            account_number = int(account_number)
+            balance = account_manager.Get_Balance(account_number)
 
             return jsonify({"account" : account_number, "balance" : balance})
 
@@ -18,6 +20,7 @@ def init_routes(app):
             abort(415, description="Content-Type must be application/json")
 
         try:
+            account_number = int(account_number)
             data = request.get_json(silent=True) # Tells Flask to not raise an error if the incoming JSON is invalid.
                                                  # Meant for customize errors
 
@@ -32,7 +35,7 @@ def init_routes(app):
             if not isinstance(amount, (int, float)):
                 abort(400, description = "Invalid amount, must be a number")
 
-            updated_balance = Withdraw(account_number, amount)
+            updated_balance = account_manager.Withdraw(account_number, amount)
 
             return jsonify({"account" : account_number, "balance" : updated_balance})
 
@@ -45,6 +48,7 @@ def init_routes(app):
             abort(415, description="Content-Type must be application/json")
 
         try:
+            account_number = int(account_number)
             data = request.get_json(silent=True)
 
             if not data:
@@ -58,7 +62,7 @@ def init_routes(app):
             if not isinstance(amount, (int, float)):
                 abort(400, description="Invalid amount, must be a number")
 
-            updated_balance = Deposite(account_number, amount)
+            updated_balance = account_manager.Deposite(account_number, amount)
 
             return jsonify({"account" : account_number, "balance" : updated_balance})
 
