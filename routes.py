@@ -35,13 +35,13 @@ def init_routes(app):
         """
 
         if not account_number.isdigit():
-            abort(400, description="Invalid account number, must be a valid integer")
+            abort(400, description = "Invalid account number, must be a valid integer")
 
         try:
             account_number = int(account_number)
             balance = account_manager.Get_Balance(account_number)
 
-            return jsonify({"account" : account_number, "balance" : balance})
+            return jsonify({"account": account_number, "balance": balance})
 
         except ValueError as error:
             abort(400, description = error)
@@ -68,12 +68,12 @@ def init_routes(app):
         """
 
         if not account_number.isdigit():
-            abort(400, description="Invalid account number, must be a valid integer")
+            abort(400, description = "Invalid account number, must be a valid integer")
 
         try:
             account_number = int(account_number)
-            data = request.get_json(silent=True) # Tells Flask not to raise an error if the incoming JSON is invalid.
-                                                 # Meant for customize errors
+            data = request.get_json(silent = True)  # Tells Flask not to raise an error if the incoming JSON is invalid.
+                                                    # Meant for customize errors
 
             if not data:
                 abort(400, description = "Request body is missing or not valid JSON")
@@ -88,10 +88,10 @@ def init_routes(app):
 
             updated_balance = account_manager.Withdraw(account_number, amount)
 
-            return jsonify({"account" : account_number, "balance" : updated_balance})
+            return jsonify({"account": account_number, "balance": updated_balance})
 
         except ValueError as error:
-            abort(400, description=error)
+            abort(400, description = error)
 
     @app.route('/accounts/<account_number>/deposit', methods = ['POST'])
     def Deposit_Money(account_number):
@@ -115,26 +115,26 @@ def init_routes(app):
         """
 
         if not account_number.isdigit():
-            abort(400, description="Invalid account number, must be a valid integer")
+            abort(400, description = "Invalid account number, must be a valid integer")
 
         try:
             account_number = int(account_number)
-            data = request.get_json(silent=True)
+            data = request.get_json(silent = True)
 
             if not data:
-                abort(400, description="Request body is missing or not valid JSON")
+                abort(400, description = "Request body is missing or not valid JSON")
 
             if "amount" not in data:
-                abort(400, description="Missing 'amount' field in request body")
+                abort(400, description = "Missing 'amount' field in request body")
 
             amount = data["amount"]
 
             if not isinstance(amount, (int, float)):
-                abort(400, description="Invalid amount, must be a number")
+                abort(400, description = "Invalid amount, must be a number")
 
             updated_balance = account_manager.Deposite(account_number, amount)
 
-            return jsonify({"account" : account_number, "balance" : updated_balance})
+            return jsonify({"account": account_number, "balance": updated_balance})
 
-        except ValueError as error :
+        except ValueError as error:
             abort(400, description = error)
