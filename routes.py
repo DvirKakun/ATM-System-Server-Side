@@ -34,6 +34,9 @@ def init_routes(app):
             400 Bad Request: If the account number is invalid or not found.
         """
 
+        if not account_number.isdigit():
+            abort(400, description="Invalid account number, must be a valid integer")
+
         try:
             account_number = int(account_number)
             balance = account_manager.Get_Balance(account_number)
@@ -62,15 +65,14 @@ def init_routes(app):
 
         Raises:
             400 Bad Request: If the account number is invalid, the request body is missing, or the amount is invalid.
-            415 Unsupported Media Type: If the request Content-Type is not application/json.
         """
 
-        if request.content_type != 'application/json':
-            abort(415, description="Content-Type must be application/json")
+        if not account_number.isdigit():
+            abort(400, description="Invalid account number, must be a valid integer")
 
         try:
             account_number = int(account_number)
-            data = request.get_json(silent=True) # Tells Flask to not raise an error if the incoming JSON is invalid.
+            data = request.get_json(silent=True) # Tells Flask not to raise an error if the incoming JSON is invalid.
                                                  # Meant for customize errors
 
             if not data:
@@ -110,11 +112,10 @@ def init_routes(app):
 
         Raises:
             400 Bad Request: If the account number is invalid, the request body is missing, or the amount is invalid.
-            415 Unsupported Media Type: If the request Content-Type is not application/json.
         """
 
-        if request.content_type != 'application/json':
-            abort(415, description="Content-Type must be application/json")
+        if not account_number.isdigit():
+            abort(400, description="Invalid account number, must be a valid integer")
 
         try:
             account_number = int(account_number)
